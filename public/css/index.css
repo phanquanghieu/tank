@@ -1,0 +1,64 @@
+body {
+  padding-top: 2rem;
+  background-color: #222;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#canvas {
+  width: 1000px;
+  height: 600px;
+  background-color: white;
+  border: 5px solid red;
+  z-index: 1000;
+}
+
+.game-container {
+  display: flex;
+  user-select: none;
+}
+.player-info {
+  box-sizing: border-box;
+  padding: 1rem 1.5rem;
+  width: 14rem;
+  height: 14rem;
+  border-bottom-right-radius: 1rem;
+  border-top-right-radius: 1rem;
+  background-color: white;
+  border: 5px solid greenyellow;
+}
+.player-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.player-hp {
+  position: relative;
+  width: 10rem;
+  height: 2rem;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5), 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.hp-num {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+}
+.hp-color {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2rem;
+  width: 10rem;
+  background-color: limegreen;
+  border-radius: 0.5rem;
+  z-index: 0;
+}

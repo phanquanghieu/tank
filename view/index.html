@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tank</title>
+    <link rel="stylesheet" href="/public/css/index.css" />
+  </head>
+  <body>
+    <div><button id="btnCreate">Create room 1</button> <button id="btnJoin">Join room 1</button></div>
+    <div class="game-container">
+      <canvas id="canvas"></canvas>
+      <div class="player-info">
+        <div class="player-name">oanhieu</div>
+        <div class="player-hp">
+          <div class="hp-num">5</div>
+          <div class="hp-color"></div>
+        </div>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/public/js/Tank.js"></script>
+    <script src="/public/js/Game.js"></script>
+    <script src="/public/js/index.js"></script>
+  </body>
+</html>
