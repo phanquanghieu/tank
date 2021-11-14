@@ -9,6 +9,12 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+
+.hidden{
+  visibility: hidden;
+}
+
+
 #canvas {
   width: 1000px;
   height: 600px;
@@ -34,7 +40,7 @@ body {
 .player-name {
   font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 .player-hp {
   position: relative;
@@ -44,6 +50,20 @@ body {
   border-radius: 0.5rem;
   font-size: 1.2rem;
   font-weight: bold;
+}
+.player-spec{
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  padding-right: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+.player-atk{
+  color: blue;
+}
+.player-level{
+  color: red;
 }
 .hp-num {
   position: absolute;
@@ -62,3 +82,106 @@ body {
   border-radius: 0.5rem;
   z-index: 0;
 }
+
+#form-sign-in {
+  width: 350px;
+  box-shadow: 0 0 8px #aaa;
+  padding: 16px 18px;
+  position: fixed;
+  left: 40%;
+  background-color: white;
+  border-radius: 0.75rem;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.jc-center {
+  justify-content: center;
+}
+
+.ali-center {
+  align-items: center;
+}
+
+.input-value {
+  width: 200px;
+  height: 24px;
+  border-radius: 8px;
+  border: 1px solid #ececec;
+  margin-left: 24px;
+}
+
+.input-value:focus {
+  outline: none;
+}
+.title-input {
+  width: 100px;
+}
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header > p {
+  cursor: pointer;
+}
+.header > p:hover {
+  color: #0000ffa6;
+}
+.footer > button {
+  background-color: #ffffff;
+  border: 1px solid #ececec;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #0000ffa6;
+}
+.footer > button:hover {
+  color: #ffffff;
+  background-color: #0000ffa6;
+}
+
+.list-room {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+
+  flex-wrap: wrap;
+}
+.list-room > .room-item {
+  margin: 1rem;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  background-color: lightblue;
+  box-shadow: 0 0 5px rgb(0, 0, 0, 0.5), 0 0 15px rgb(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  width: 33.33%;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.75rem;
+}
+
+.room-count {
+  margin: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.list-room > .room-item:hover {
+  background-color: lime;
+}
+.footer > button {
+  background-color: #ffffff;
+  border: 1px solid #ececec;
+  padding: 8px 12px;
+  border-radius: 4px;
+  color: #0000ffa6;
+}
+.footer > button:hover {
+  color: #ffffff;
+  background-color: #0000ffa6;
+}
+

@@ -1,67 +1,79 @@
-const uuid = require('uuid')
+const { login, register, updatePlayer } = require('./api')
 
 let io
-let roomsData = {}
+let roomsData = {
+  room1: {
+    roomId: 'room1',
+    bullets: [],
+    tanks: {},
+    playerActions: {},
+  },
+  room2: {
+    roomId: 'room2',
+    bullets: [],
+    tanks: {},
+    playerActions: {},
+  },
+  room3: {
+    roomId: 'room3',
+    bullets: [],
+    tanks: {},
+    playerActions: {},
+  },
+  room4: {
+    roomId: 'room4',
+    bullets: [],
+    tanks: {},
+    playerActions: {},
+  },
+}
 
 exports.init = function (_io) {
   io = _io
   io.on('connection', (socket) => {
-    socket.on('connection', onConnection)
-    socket.on('createRoom', onCreateRoom)
+    socket.on('register', onRegister)
+    socket.on('login', onLogin)
     socket.on('joinRoom', onJoinRoom)
     socket.on('enterKey', onEnterKey)
   })
 }
 
-function onConnection(){
-  // this.emit('loadRoom', {rooms})
+async function onRegister({ username, password }) {
+  let res = await register(username, password)
+  this.emit('resRegister', res)
 }
 
-function onCreateRoom() {
-  if (roomsData.room1) return
-  // let roomId = uuid.v4()
-  let roomId = 'room1'
-  this.join(roomId)
-  this.roomId = roomId
+async function onLogin({ username, password }) {
+  let res = await login(username, password)
+  if (res.e) return this.emit('resLogin', res)
+  let roomsInfo = []
 
-  let intervalId = setInterval(() => handleLogic(roomId), 15)
+  Object.keys(roomsData).forEach((roomKey) => {
+    roomsInfo.push({ id: roomKey, name: 'room' })
+  })
 
-  roomsData[roomId] = {
-    roomId,
-    intervalId,
-    bullets: [],
-    tanks: {
-      [this.id]: {
-        x: 200,
-        y: 200,
-        hp: 5,
-        color: 'lime',
-        gunDirection: 0,
-      },
-    },
-    playerActions: {
-      [this.id]: {
-        up: false,
-        down: false,
-        left: false,
-        right: false,
-        fire: false,
-        gunDirection: 0,
-      },
-    },
+  this.emit('resLogin', { ...res, roomsInfo })
+}
+
+function onJoinRoom({ roomId, player }) {
+  if (!roomsData[roomId]) return
+  let checkRoom = io.sockets.adapter.rooms.get(roomId)
+  if (!checkRoom) createRoom(roomId)
+  else if (checkRoom.size > 4) {
+    return
   }
-}
-
-function onJoinRoom({ roomId }) {
-  if(!roomsData[roomId]) return
-  roomsData[roomId].tanks[this.id] = {
-    x: 200,
-    y: 200,
-    hp: 5,
-    color: 'red',
+  roomsData[roomId].tanks[player._id] = {
+    socketId: this.id,
+    playerId: player._id,
+    hp: player.hp,
+    hpMax: player.hp,
+    level: player.level,
+    atk: player.atk,
+    x: Math.floor(Math.random() * (GAME.width - 100) + 50),
+    y: Math.floor(Math.random() * (GAME.height - 100) + 50),
     gunDirection: 0,
   }
-  roomsData[roomId].playerActions[this.id] = {
+  roomsData[roomId].playerActions[player._id] = {
     up: false,
     down: false,
     left: false,
@@ -71,15 +83,21 @@ function onJoinRoom({ roomId }) {
   }
   this.join(roomId)
   this.roomId = roomId
+  this.playerId = player._id
 }
 
 function onEnterKey(playerAction) {
-  if (roomsData[this.roomId])
-    Object.assign(roomsData[this.roomId].playerActions[this.id], playerAction)
+  if (roomsData[this.roomId]?.playerActions?.[this.playerId])
+    Object.assign(roomsData[this.roomId].playerActions[this.playerId], playerAction)
 }
 
+const createRoom = (roomId) => {
+  console.log('create', roomId)
+  let intervalId = setInterval(() => handleLogic(roomId), GAME.fps)
+  roomsData[roomId].intervalId = intervalId
+}
 
-function handleLogic(roomId) {
+const handleLogic = (roomId) => {
   let tanks = roomsData[roomId].tanks
   let bullets = roomsData[roomId].bullets
   let playerActions = roomsData[roomId].playerActions
@@ -108,6 +126,8 @@ function handleLogic(roomId) {
         y: tank.y - Math.sin(_gunDirection) * TANK.gunLength,
         vx: Math.cos(_gunDirection) * TANK.bulletSpeed,
         vy: -Math.sin(_gunDirection) * TANK.bulletSpeed,
+        atk: tank.atk,
+        playerId: tank.playerId,
       })
     }
   })
@@ -132,14 +152,19 @@ function handleLogic(roomId) {
 }
 
 const isCollision = (bullet, roomId) => {
-  for (let [key, tank] of Object.entries(roomsData[roomId].tanks)) {
+  for (let [playerId, tank] of Object.entries(roomsData[roomId].tanks)) {
     if (isInArea(bullet.x, bullet.y, tank.x, tank.y, TANK.bodySize / 2)) {
-      roomsData[roomId].tanks[key].hp -= 1
-      if(roomsData[roomId].tanks[key].hp ===0){
-        io.to(key).emit('lose')
-        io.to(key).socketsLeave(roomId)
-        delete roomsData[roomId].tanks[key]
-        delete roomsData[roomId].playerActions[key]
+      let tanks = roomsData[roomId].tanks
+      tanks[playerId].hp -= bullet.atk
+
+      if (tank.hp <= 0) {
+        tanks[bullet.playerId].level += 1
+        updatePlayer(bullet.playerId, tanks[bullet.playerId].level)
+        updatePlayer(playerId, tank.level)
+        io.to(tank.socketId).emit('lose')
+        io.to(tank.socketId).socketsLeave(roomId)
+        delete roomsData[roomId].tanks[playerId]
+        delete roomsData[roomId].playerActions[playerId]
       }
       return true
     }
@@ -154,7 +179,6 @@ const isInMap = (x, y, obj) => {
 }
 
 const isInArea = (x1, y1, x2, y2, r) => {
-  console.log(x1, y1, x2, y2, r)
   if (x1 >= x2 - r && x1 <= x2 + r && y1 >= y2 - r && y1 <= y2 + r) return true
   return false
 }
@@ -162,13 +186,14 @@ const isInArea = (x1, y1, x2, y2, r) => {
 const GAME = {
   width: 1000,
   height: 600,
+  fps: 50,
 }
 
 const TANK = {
-  tankSpeed: 2,
+  tankSpeed: 5,
   bodySize: 30,
   gunLength: 30,
-  bulletSpeed: 5,
+  bulletSpeed: 12,
   bulletSize: 6,
   bulletColor: 'blue',
 }

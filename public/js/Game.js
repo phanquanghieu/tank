@@ -2,6 +2,7 @@ const Game = {
   canvas: document.querySelector('#canvas'),
   c: canvas.getContext('2d'),
   intervalId: null,
+  fps: 50,
 
   playerAction: {
     up: false,
@@ -24,7 +25,7 @@ const Game = {
     Game.intervalId = setInterval(() => {
       socket.emit('enterKey', Game.playerAction)
       Game.playerAction.fire = false
-    }, 15)
+    }, Game.fps)
 
     Game.run()
   },

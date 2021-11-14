@@ -11,7 +11,18 @@ const playerSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    
+    hp: {
+      type: Number,
+      required: true,
+    },
+    atk: {
+      type: Number,
+      required: true,
+    },
+    level: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,

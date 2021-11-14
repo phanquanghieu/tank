@@ -9,7 +9,7 @@ const Tank = {
   drawTank(tank) {
     // draw tank body
     Game.c.beginPath()
-    Game.c.fillStyle = tank.color
+    Game.c.fillStyle = player._id === tank.playerId ? 'lime' : 'red'
     Game.c.fillRect(
       tank.x - Tank.bodySize / 2,
       tank.y - Tank.bodySize / 2,

@@ -1,7 +1,5 @@
 const express = require('express')
 const app = express()
-const bodyParser = require("body-parser");
-const router = require('./api')
 const mongoose = require('mongoose')
 
 require('dotenv').config()
@@ -25,12 +23,6 @@ const { Server } = require('socket.io')
 const io = new Server(server)
 const GameServer = require('./GameServer')
 GameServer.init(io)
-
-
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(router)
 
 app.use('/public', express.static(__dirname + '/public'))
 
