@@ -92,7 +92,9 @@ body {
   background-color: white;
   border-radius: 0.75rem;
 }
-
+.error{
+  color: red;
+}
 .d-flex {
   display: flex;
 }

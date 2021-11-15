@@ -101,6 +101,7 @@ const handleLogic = (roomId) => {
   let tanks = roomsData[roomId].tanks
   let bullets = roomsData[roomId].bullets
   let playerActions = roomsData[roomId].playerActions
+
   Object.keys(playerActions).forEach((playerId) => {
     let tank = tanks[playerId]
     let playerAction = playerActions[playerId]
@@ -186,14 +187,14 @@ const isInArea = (x1, y1, x2, y2, r) => {
 const GAME = {
   width: 1000,
   height: 600,
-  fps: 50,
+  fps: 15,
 }
 
 const TANK = {
-  tankSpeed: 5,
+  tankSpeed: 2,
   bodySize: 30,
   gunLength: 30,
-  bulletSpeed: 12,
+  bulletSpeed: 5,
   bulletSize: 6,
   bulletColor: 'blue',
 }

@@ -2,7 +2,7 @@ const Game = {
   canvas: document.querySelector('#canvas'),
   c: canvas.getContext('2d'),
   intervalId: null,
-  fps: 50,
+  fps: 15,
 
   playerAction: {
     up: false,

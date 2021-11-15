@@ -1,8 +1,6 @@
 const Tank = {
-  tankSpeed: 3,
   bodySize: 30,
   gunLength: 30,
-  bulletSpeed: 5,
   bulletSize: 6,
   bulletColor: 'blue',
 

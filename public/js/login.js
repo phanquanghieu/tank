@@ -8,6 +8,8 @@ handleLogin = () => {
             <p class="title-input">Mật khẩu</p>
             <input id='i-password' class="input-value" placeholder="Nhập mật khẩu"/>
         </div>
+        
+        <div class='error'></div>
         <div class="footer d-flex jc-center">
         <button onclick="handleGoGame()">Đăng nhập</button>
       </div>
@@ -23,6 +25,7 @@ handleRegister = () => {
             <p class="title-input">Mật khẩu</p>
             <input id='i-password' class="input-value" placeholder="Nhập mật khẩu"/>
         </div>
+        <div class='error'></div>
         <div class="footer d-flex jc-center">
         <button onclick="register()">Đăng Ký</button>
       </div>
@@ -42,12 +45,18 @@ handleGoGame = async () => {
 }
 
 socket.on('resRegister', (data) => {
-  if (data.e) return
+  if (data.e) {
+    document.querySelector('.error').innerHTML = "Tài khoản đã tồn tại"
+    return
+  }
   handleLogin()
 })
 
 socket.on('resLogin', (data) => {
-  if (data.e) return
+  if (data.e) {
+    document.querySelector('.error').innerHTML = "Tài khoản hoặc mật khẩu không chính xác"
+    return
+  }
 
   player = data.player
 
@@ -89,7 +98,6 @@ socket.on('resLogin', (data) => {
         roomId: btnJoinNode.getAttribute('data-roomId'),
         player: data.player,
       })
-      console.log(data.player)
       Game.init()
     })
   }
