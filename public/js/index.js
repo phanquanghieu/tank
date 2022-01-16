@@ -2,21 +2,24 @@ let socket = io()
 let player = {}
 let roomsData = {}
 
-let gameContainerNode = document.querySelector('.game-container')
-let formSignInNode = document.querySelector('#form-sign-in')
+let gameContainerNode = document.querySelector(".game-container")
+let formSignInNode = document.querySelector("#form-sign-in")
 
-let hpNumNode = document.querySelector('.hp-num')
-let hpColorNode = document.querySelector('.hp-color')
+let hpNumNode = document.querySelector(".hp-num")
+let hpColorNode = document.querySelector(".hp-color")
 
-socket.on('data', (data) => {
+socket.on("data", (data) => {
   roomsData = data
   console.log(data)
   hpNumNode.innerHTML = data.tanks[player._id].hp
   hpColorNode.style.width = `${(data.tanks[player._id].hp / player.hp) * 10}rem`
+  document.querySelector(".player-level").innerHTML =
+    data.tanks[player._id].level
+  document.querySelector(".player-atk").innerHTML = data.tanks[player._id].atk
 })
 
-socket.on('lose', () => {
+socket.on("lose", () => {
   Game.stop()
-  gameContainerNode.classList.add('hidden')
-  formSignInNode.classList.remove('hidden')
+  gameContainerNode.classList.add("hidden")
+  formSignInNode.classList.remove("hidden")
 })

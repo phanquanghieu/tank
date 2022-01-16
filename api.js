@@ -1,4 +1,4 @@
-const { Player } = require('./models/player')
+const { Player } = require("./models/player")
 
 const register = async (username, password) => {
   console.log(username, password)
@@ -19,8 +19,16 @@ const login = async (username, password) => {
   return { e: 0, player }
 }
 
-const updatePlayer = (playerId, level) => {
-  Player.updateOne({ _id: playerId }, { level, hp: level + 10, atk: Math.ceil(level / 5) }).then((d) => {console.log(d)})
+const getPlayer = async (username) => {
+  let player = await Player.findOne({ username })
+  return player
 }
 
-module.exports = { register, login, updatePlayer }
+const updatePlayer = (playerId, level) => {
+  Player.updateOne(
+    { _id: playerId },
+    { level, hp: level + 10, atk: Math.ceil(level / 5) }
+  ).then((d) => {})
+}
+
+module.exports = { register, login, updatePlayer, getPlayer }
