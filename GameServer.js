@@ -4,24 +4,28 @@ let io
 let roomsData = {
   room1: {
     roomId: "room1",
+    roomName: "Room 1",
     bullets: [],
     tanks: {},
     playerActions: {},
   },
   room2: {
     roomId: "room2",
+    roomName: "Room 2",
     bullets: [],
     tanks: {},
     playerActions: {},
   },
   room3: {
     roomId: "room3",
+    roomName: "Room 3",
     bullets: [],
     tanks: {},
     playerActions: {},
   },
   room4: {
     roomId: "room4",
+    roomName: "Room 4",
     bullets: [],
     tanks: {},
     playerActions: {},
@@ -49,7 +53,11 @@ async function onLogin({ username, password }) {
   let roomsInfo = []
 
   Object.keys(roomsData).forEach((roomKey) => {
-    roomsInfo.push({ id: roomKey, name: "room" })
+    roomsInfo.push({
+      id: roomKey,
+      name: roomsData[roomKey].roomName,
+      numPlayer: Object.keys(roomsData[roomKey].tanks).length,
+    })
   })
 
   this.emit("resLogin", { ...res, roomsInfo })
@@ -59,7 +67,7 @@ async function onJoinRoom({ roomId, player }) {
   if (!roomsData[roomId]) return
   if (!roomsData[roomId].intervalId) createRoom(roomId)
   let checkRoom = io.sockets.adapter.rooms.get(roomId)
-  if (checkRoom?.size > 4) return
+  if (checkRoom?.size >= 4) return
 
   player = await getPlayer(player.username)
 
@@ -86,6 +94,17 @@ async function onJoinRoom({ roomId, player }) {
   this.join(roomId)
   this.roomId = roomId
   this.playerId = player._id
+
+  let roomsInfo = []
+  Object.keys(roomsData).forEach((roomKey) => {
+    roomsInfo.push({
+      id: roomKey,
+      name: roomsData[roomKey].roomName,
+      numPlayer: Object.keys(roomsData[roomKey].tanks).length,
+    })
+  })
+  console.log(roomsInfo)
+  this.emit("roomChange", roomsInfo)
 }
 
 function onEnterKey(playerAction) {

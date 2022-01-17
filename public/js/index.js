@@ -18,6 +18,20 @@ socket.on("data", (data) => {
   document.querySelector(".player-atk").innerHTML = data.tanks[player._id].atk
 })
 
+socket.on("roomChange", (roomsInfo) => {
+  let listRoom = ""
+  roomsInfo.forEach((room) => {
+    listRoom += `
+      <div  class='room-item btnJoin' data-roomId='${room.id}'>
+          <div>${room.name}</div>
+          <div class='room-count'>${numPlayer}/4</div>
+      </div>
+      `
+  })
+  console.log(roomsInfo, listRoom)
+  document.querySelector(".list-room").innerHTML = listRoom
+})
+
 socket.on("lose", () => {
   Game.stop()
   gameContainerNode.classList.add("hidden")
